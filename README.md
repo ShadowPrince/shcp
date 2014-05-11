@@ -22,7 +22,8 @@ Copyright © 2014 Vasiliy Horbachenko
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
 
-## _______
+## 
 
 Not shure we need this, but why not? 
+
 ![dicaprio](http://i.imgur.com/3Afjw1u.jpg)
