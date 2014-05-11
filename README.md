@@ -1,16 +1,17 @@
 # shcp
 
-Had some fun making command intepretator built with clojure and JNI (Clojure -> Java -> JNI -> C++ lib -> posix libs -> system calls). Proudly named "Shellception".
+Had some fun making command intepretator built with clojure and JNI (_Clojure -> Java -> JNI -> C++ lib -> posix libs -> system calls_). Proudly named __Shellception__.
 
 ## Installation
 
-    `make` in java/bin
-    `lein uberjar` in .
+* `make` in _java/bin_
+* `lein uberjar` in _._
 
 ## Usage
 
 No practical use.
-    ` $ java -Djava.library.path=java/bin -jar target/shcp*jar`
+
+    $ java -Djava.library.path=java/bin -jar target/shcp*jar
 
 Use `--lanterna` option to use lanterna UI backend instead of print/read-line.
 
