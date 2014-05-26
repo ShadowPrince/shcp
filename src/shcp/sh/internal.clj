@@ -1,23 +1,29 @@
 (ns shcp.sh.internal
   (:require [clojure.string :as str]
-            [shcp.ui.core :as ui]))
+            [shcp.ui.core :as ui]
+            [shcp.sh.jobs :as jobs])
+  (:import [org.sp.shcp.llapi.LLAPI]))
 
 (defn cd [st arg]
   (let [dir (get-in st [:env :dir])
-        dir (cond 
+        newdir (cond 
               (.startsWith arg "/") arg
               (.startsWith arg "..") (str/join "/" (conj (butlast (str/split dir #"/")) ""))
               true (str dir "/" arg))]
-    (list (assoc-in st [:env :dir] dir) {:exit 0 :out (str) :err (str)})))
+    (if (= 0 (org.sp.shcp.llapi.LLAPI/cd newdir))
+      (list (assoc-in st [:env :dir] dir) {:exit 0})  
+      (list st {:exit -1 :err (format "No such dir: \"%s\"!\n" newdir)}))))
 
-(defn reformat [st & [arg]]
-  (let [l (case arg
-            nil (:cols st)
-            (Integer/parseInt arg))]
-    (list (update-in st [:output] #(ui/format-output (str/join %) l)) {:exit 0 :out (str) :err (str)})))
+(defn wait [st & [strpid]]
+  (if-let [{:keys [pid] :or [pid]} (jobs/get st (Integer/parseInt strpid))]
+    (list st {:exit (org.sp.shcp.llapi.LLAPI/waitPid pid) :out (format "%s finished" pid)})
+    (list st {:exit -1 :out (format "Pid or job \"%s\" not found!\n" strpid)})))
 
 (defn exit [st]
-  (throw (Exception. "Exit")))
+  (list (assoc st :exit true) {:exit 0}))
+
+(defn jobs [st]
+  (list st {:out (str (str/join "\n" (map-indexed #(format "#%d: pid %d" %1 (:pid %2)) @(:jobs st))) "\n")}))
 
 (defn internal? [cmd]
   (let [publics (ns-publics 'shcp.sh.internal)]
@@ -25,6 +31,4 @@
 
 (defn internal [st cmd]
   (let [[cmd & args] (str/split cmd #" ")]
-    (try
-      (apply (->> cmd symbol (ns-resolve 'shcp.sh.internal)) st args)
-      (catch Exception e {:error -10 :out (str) :err (str e)}))))
+    (apply (->> cmd symbol (ns-resolve 'shcp.sh.internal)) st args)))

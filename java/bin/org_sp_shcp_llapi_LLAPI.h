@@ -12,8 +12,21 @@ extern "C" {
  * Method:    popen
  * Signature: (Ljava/lang/String;)V
  */
-JNIEXPORT void JNICALL Java_org_sp_shcp_llapi_LLAPI_popen
+
+JNIEXPORT jint JNICALL Java_org_sp_shcp_llapi_LLAPI_exec
+  (JNIEnv *env, jclass cls, jstring str, jobjectArray stringArray);
+
+JNIEXPORT jint JNICALL Java_org_sp_shcp_llapi_LLAPI_execBackground
+  (JNIEnv *env, jclass cls, jstring str, jobjectArray stringArray);
+
+JNIEXPORT jint JNICALL Java_org_sp_shcp_llapi_LLAPI_cd
   (JNIEnv *env, jclass cls, jstring str);
+
+JNIEXPORT jint JNICALL Java_org_sp_shcp_llapi_LLAPI_waitPid 
+  (JNIEnv *env, jclass cls, jint pid);
+
+JNIEXPORT jint JNICALL Java_org_sp_shcp_llapi_LLAPI_checkPid 
+  (JNIEnv *env, jclass cls, jint pid);
 
 #ifdef __cplusplus
 }

@@ -3,16 +3,25 @@
            (org.sp.shcp.llapi LLAPI))
   (:require [clojure.java.shell :as sh]
             [clojure.java.io :as io]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [shcp.sh.jobs :as jobs]))
 
-(defn execute-old [st cmd]
-  (try 
-    (let [o (apply sh/sh (concat (str/split cmd #" ") (list :in (:in st) :dir (get-in st [:env :dir]))))]
-      (list st o))
-    (catch java.io.IOException e (list st {:exit -10 :out (str) :err (str e)}))))
+(defn exec [st cmd args]
+  (list st {:exit (LLAPI/exec cmd (into-array args))}))
+
+(defn exec-background [st cmd args]
+  (let [pid (LLAPI/execBackground cmd  (into-array args))
+        job (jobs/push! st pid)]
+    (list st {:exit 0 :out (format "%d in background, job #%d\n" pid job)})))
 
 (defn execute [st cmd]
-  (try 
-    (LLAPI/popen (str "cd " (get-in st [:env :dir]) " ; " cmd))
-    (list st {:out "" :exit 0 :err ""})
-    (catch java.io.IOException e (list st {:exit -10 :out (str) :err (str e)})))) 
+  (let [[cmd, & args] (str/split cmd #" ")
+        [args, background] (if (= (last args) "&") [(butlast args) true] [args false])
+
+        args (cons cmd args) 
+        cmd (str "/usr/bin/" cmd)]
+    (try 
+      (if background
+        (exec-background st cmd args)
+        (exec st cmd args))
+      (catch java.io.IOException e (list st {:exit -10 :out (str) :err (str e)}))))) 

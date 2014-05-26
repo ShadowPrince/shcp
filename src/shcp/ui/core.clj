@@ -2,20 +2,32 @@
   (:require [clojure.string :as str]
             [lanterna.screen :as s])) 
 
-(defn len-split [s l]
-  (if (or (empty? s) (= s "\n"))
-    []
-    (let [l (if (< (.length s) l) (.length s) l)]
-      (cons (.substring s 0 l) (len-split (.substring s l) l)))))
+(comment 
+  ;; Old ones
+  (defn len-split [s l]
+    (if (or (empty? s) (= s "\n"))
+      []
+      (let [l (if (< (.length s) l) (.length s) l)]
+        (cons (.substring s 0 l) (len-split (.substring s l) l)))))
+
+  (defn format-output2 [s w]
+    (reduce (fn [accum line]
+              (concat accum (len-split (str line "\n") w)))
+            []
+            (str/split s #"\n")))
+  )
 
 (defn format-output [s w]
-  (reduce (fn [accum line]
-            (concat accum (len-split (str line "\n") w)))
-          []
-          (str/split s #"\n")))
+  (if (empty? s) 
+    []
+    (let [first-newline (.indexOf s "\n")
+          to (if (or (= first-newline -1) (> first-newline w))
+               (if (> (.length s) w) w (.length s))
+               (inc first-newline))]
+      (cons (.substring s 0 to) (format-output (.substring s to) w)))))
 
 (defn prompt [st]
-  (str  (:last-exit st) " $ "))
+  (format (:prompt st) (-> st :env :dir)))
 
 (defn paint! [scr st]
   (s/clear scr)

@@ -5,9 +5,11 @@ public class LLAPI {
         System.loadLibrary("llapi");
     }
 
-    public static void main(String[] args) {
-        popen("top -b");
-    }
+    native public static int exec(String cmd, String[] args);
+    native public static int execBackground(String cmd, String[] args);
 
-    native public static void popen(String cmd);
+    native public static int waitPid(int pid);
+    native public static int checkPid(int pid);
+
+    native public static int cd(String path);
 }

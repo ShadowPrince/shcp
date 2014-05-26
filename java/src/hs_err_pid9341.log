@@ -1,0 +1,61 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0xb75d0745, pid=9341, tid=3061091136
+#
+# JRE version: Java(TM) SE Runtime Environment (8.0_20-b13) (build 1.8.0_20-ea-b13)
+# Java VM: Java HotSpot(TM) Server VM (25.20-b12 mixed mode linux-x86 )
+# Problematic frame:
+# C  [libc.so.6+0x72745]
+[error occurred during error reporting (printing problematic frame), id 0xb]
+
+# Failed to write core dump. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.sun.com/bugreport/crash.jsp
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread is native thread
+
+siginfo: si_signo: 11 (SIGSEGV), si_code: 1 (SEGV_MAPERR), si_addr: 0x2124d0e9
+
+Registers:
+EAX=0x6477702f, EBX=0xb771c000, ECX=0xb6500010, EDX=0x00000000
+ESP=0xb67480b0, EBP=0x859c4110, ESI=0x6477702f, EDI=0x2124d0e1
+EIP=0xb75d0745, EFLAGS=0x00010202, CR2=0x2124d0e9
+
+Top of Stack: (sp=0xb67480b0)
+0xb67480b0:   00000000 00000000 b6500040 b6e2de7e
+0xb67480c0:   b76bd380 b650002c b70b19fa b650003c
+0xb67480d0:   b65072f8 b674810c b75d0639 b771c000
+0xb67480e0:   b6500010 0000062c b6500010 b75d1aa0
+0xb67480f0:   00000000 00000003 00000630 b6e2de7e
+0xb6748100:   b6506400 b70b19fa 00000050 0000062c
+0xb6748110:   b6507240 b674814c b75d0c3b b711c1c0
+0xb6748120:   b6507240 b674814c b6748168 b6eabdbe 
+
+Instructions: (pc=0xb75d0745)
+0xb75d0725:   24 04 8b 47 04 89 c6 83 e6 fa 8d 2c 37 8b 55 04
+0xb75d0735:   83 e2 f8 a8 01 89 14 24 75 41 8b 07 29 c7 01 c6
+0xb75d0745:   8b 47 08 8b 57 0c 3b 78 0c 0f 85 8c 00 00 00 3b
+0xb75d0755:   7a 08 0f 85 83 00 00 00 81 7f 04 ff 01 00 00 89 
+
+Register to memory mapping:
+
+EAX=0x6477702f is an unknown value
+EBX=0xb771c000: <offset 0x1be000> in /usr/lib/libc.so.6 at 0xb755e000
+ECX=0xb6500010 is an unknown value
+EDX=0x00000000 is an unknown value
+ESP=0xb67480b0 is an unknown value
+EBP=0x859c4110 is an unknown value
+ESI=0x6477702f is an unknown value
+EDI=0x2124d0e1 is an unknown value
+
+
+Stack: 
+[error occurred during error reporting (printing stack bounds), id 0xb]
+
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [libc.so.6+0x72745]
