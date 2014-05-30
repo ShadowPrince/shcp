@@ -1,35 +1,36 @@
 (ns shcp.sh.jobs
-  (:import [org.sp.shcp.llapi.LLAPI]))
-
-(def ^:dynamic *watcher* (atom nil))
+  (:import [sun.misc Signal SignalHandler]
+           [org.sp.shcp.llapi LLAPI]))
 
 (defn storage []
   (atom []))
 
-(defn get [st i]
+(defn -get [st i]
   (if (> (count @(:jobs st)) i)
     (nth @(:jobs st) i)
-    nil))
+    (let [f (filter #(= (:pid %) i) @(:jobs st))]
+      (if (empty? f)
+        nil
+        (first f)))))
 
 (defn push! [st pid]
   (swap! (:jobs st) conj {:pid pid})
   (dec (count @(:jobs st))))
 
-(defn stop-watcher! []
-  (if @*watcher*
-    (.interrupt @*watcher*)))
+(defn handle-chld! [st]
+  (Signal/handle (Signal. "CHLD") 
+                 (proxy [SignalHandler] []
+                   (handle [sig] 
+                     (loop [code (LLAPI/checkPid -1)]
+                       (cond
+                         (neg? code) nil
+                         (zero? code) (recur (LLAPI/checkPid -1))
+                         :else (do
+                                 (swap! (:jobs st) #(remove (fn [j] (= (:pid j) code)) %1))
+                                 (println (format "Process %d finished!\n" code))
+                                 (recur (LLAPI/checkPid -1))))))))
+  (Signal/handle (Signal. "INT") 
+                 (proxy [SignalHandler] []
+                   (handle [sig] 
+                     nil))))
 
-(defn start-watcher! [st]
-  (reset! 
-    *watcher*
-    (Thread.
-      (fn []
-        (let [finished (filter (comp zero? second) 
-                               (map #(list % (org.sp.shcp.llapi.LLAPI/checkPid (:pid %))) 
-                                    @(:jobs st)))]
-          (swap! (:jobs st) #(filter (comp not (set finished)) %))
-          (mapv #(println (format "\nChild %d finished!" (-> % first :pid))) finished))
-        (Thread/sleep 1000)
-        (recur))))
-  (.start @*watcher*)
-  st)

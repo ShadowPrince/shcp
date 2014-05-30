@@ -18,7 +18,7 @@
                          ;; anyway, I should use Stuart Sierra's reload
                          (in-ns 'user)
                          (load "autoload") 
-                         (autoload/autoload-thread! "src/shcp") 
+                         (autoload/autoload-thread! "src/shcp" false) 
                          (println "Threaded autoloader engaged!")
                          (in-ns 'shcp.core)
                          (use 'clojure.repl)

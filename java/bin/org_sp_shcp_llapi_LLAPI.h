@@ -22,11 +22,25 @@ JNIEXPORT jint JNICALL Java_org_sp_shcp_llapi_LLAPI_execBackground
 JNIEXPORT jint JNICALL Java_org_sp_shcp_llapi_LLAPI_cd
   (JNIEnv *env, jclass cls, jstring str);
 
+JNIEXPORT jint JNICALL Java_org_sp_shcp_llapi_LLAPI_setEnv
+  (JNIEnv *env, jclass cls, jstring key, jstring value);
+
+JNIEXPORT jint JNICALL Java_org_sp_shcp_llapi_LLAPI_unsetEnv 
+  (JNIEnv *env, jclass cls, jstring jkey);
+
+JNIEXPORT jstring JNICALL Java_org_sp_shcp_llapi_LLAPI_getEnv 
+  (JNIEnv *env, jclass cls, jstring jkey);
+
+JNIEXPORT jstring JNICALL Java_org_sp_shcp_llapi_LLAPI_getAllEnv 
+    (JNIEnv *env, jclass cls);
+
 JNIEXPORT jint JNICALL Java_org_sp_shcp_llapi_LLAPI_waitPid 
   (JNIEnv *env, jclass cls, jint pid);
 
 JNIEXPORT jint JNICALL Java_org_sp_shcp_llapi_LLAPI_checkPid 
   (JNIEnv *env, jclass cls, jint pid);
+
+
 
 #ifdef __cplusplus
 }

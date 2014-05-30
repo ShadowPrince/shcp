@@ -17,7 +17,8 @@
   ([path] (autoload! path false []))
   ([path verbose] (autoload! path verbose []))
   ([path verbose coll]
-   (let [mdates (get-files-mdates (File. path))]
+   (let [_ (comment chdir to path!)
+         mdates (get-files-mdates (File. path))]
      (doseq [f mdates]
        (let [k (key f)
              oldts (get coll k)
@@ -25,7 +26,7 @@
          (if (not= oldts newts)
            (do
              (if verbose
-               (print (str "File " k " modified, loading... ")))
+               (println (str "File " k " modified, loading... ")))
              (load-file k)
              (if verbose
                (println "ok."))))))
@@ -47,7 +48,7 @@
       (while true
         (try
           (reset! omdates (autoload! path verbose @omdates))
-          (catch Exception e (reset! omdates (autoload-exception-handle! path e))))
+          (catch Exception e (prn e) (reset! omdates (autoload-exception-handle! path e))))
         (Thread/sleep 500)))))
 
 (def thread-instance (atom nil))

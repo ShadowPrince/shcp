@@ -1,8 +1,10 @@
 (ns shcp.sh.core
+  (:import [org.sp.shcp.llapi LLAPI])
   (:require [shcp.sh.exec :as e]
             [shcp.sh.internal :as i]
             [shcp.ui.core :as ui]
             [shcp.ui.input :as in]
+            [shcp.sh.args :as args]
             [clojure.string :as str]))
 
 (defn internal-out! [out]
@@ -14,7 +16,12 @@
 (defn process-command 
   "Process command if available from on state ~st"
   [st cmd]
-  (let [[st o] (if (i/internal? cmd) (i/internal st cmd) (e/execute st cmd))]
-    (internal-out! o)
-    (assoc-in st [:last-exit] (:exit o))))
+  (if (empty? cmd)
+    st
+    (let [cmd (->> cmd
+                   (args/sub-vars st)
+                   (args/sub-env st (LLAPI/getAllEnv)))
+          [st o] (if (i/internal? cmd) (i/internal st cmd) (e/execute st cmd))]
+      (internal-out! o)
+      (assoc-in st [:env :vars "status"] (:exit o)))))
 
