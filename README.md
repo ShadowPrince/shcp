@@ -13,8 +13,6 @@ No practical use.
 
     $ java -Djava.library.path=java/bin -jar target/shcp*jar
 
-Use `--lanterna` option to use lanterna UI backend instead of print/read-line.
-
 ## License
 
 Copyright © 2014 Vasiliy Horbachenko
