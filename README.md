@@ -1,6 +1,6 @@
 # shcp
 
-Had some fun making command intepretator built with clojure and JNI (_Clojure -> Java -> JNI -> C++ lib -> posix libs -> system calls_). Proudly named __Shellception__.
+I've been having some fun making command intepretator built with clojure and JNI (_Clojure -> Java -> JNI -> C++ lib -> posix libs -> system calls_). Proudly named __Shellception__.
 
 ## Installation
 
@@ -9,7 +9,7 @@ Had some fun making command intepretator built with clojure and JNI (_Clojure ->
 
 ## Usage
 
-No practical use.
+No practical usage.
 
     $ java -Djava.library.path=java/bin -jar target/shcp*jar
 
