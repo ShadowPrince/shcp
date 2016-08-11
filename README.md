@@ -22,6 +22,6 @@ your option) any later version.
 
 ## .
 
-Not shure we need this, but why not? 
+Not sure we need this, but why not? 
 
 ![dicaprio](http://i.imgur.com/3Afjw1u.jpg)
